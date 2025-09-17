@@ -1,0 +1,470 @@
+<reports version="2.0">
+
+<!-- NOTES:
+- Need to add additional filters for TKU only nodes -->
+
+<!-- Reports for RFE -->
+<!-- HardwareDetail reports -->
+    <chart name="Missing.HardwareDetail.Chart" default="pie">
+        <title>Hardware</title>
+        <description>Missing EOL record for Hardware</description>
+        <kind>FLAGS (no_segment) Host,HostContainer,HardwareComponent,HardwareContainer,ManagementController,NetworkDevice,Printer,SNMPManagedDevice,StorageDevice</kind>
+        <where>not virtual and not nodecount(traverse ::HardwareDetail:SupportDetail) and (vendor and not vendor matches 'Amazon') and model</where>
+        <order-by>vendor</order-by>
+        <split>vendor as "_|vendor|_"</split>
+        <y-axis-title>_|Count|_</y-axis-title>
+        <show>
+            name,
+            vendor, 
+            model, 
+            product_id, 
+            firmware_version,
+            num_processors, 
+            os_type, 
+            os_version 
+        </show>
+    </chart>
+
+    <report name="Missing.EOL.HardwareComponent.Report">
+        <title>HardwareComponent</title>
+        <description>HardwareComponent nodes with missing EOL data</description>
+        <kind>HardwareComponent</kind>
+        <where>
+            not nodecount(traverse ::HardwareDetail:SupportDetail) and model and vendor
+        </where>
+        <show>
+            vendor, 
+            model, 
+            firmware_version 
+            processwith countUnique(0)
+        </show>
+    </report>
+    <report name="Missing.EOL.HardwareContainer.Report">
+        <title>HardwareContainer</title>
+        <description>HardwareContainer nodes with missing EOL data</description>
+        <kind>HardwareContainer</kind>
+        <where>
+            not nodecount(traverse ::HardwareDetail:SupportDetail) and model and vendor
+        </where>
+        <show>
+            vendor, 
+            model
+            processwith countUnique(0)
+        </show>
+    </report>
+     <report name="Missing.HRD.Host.Report">
+        <title>Host (Hardware)</title>
+        <description>Host nodes with missing Hardware Reference Data (HRD)</description>
+        <kind>Host</kind>
+        <where>
+            not virtual and not nodecount(traverse ::ReferenceData:HardwareReferenceData) and vendor and not vendor matches 'Amazon' and model
+        </where>
+        <show>
+            vendor, 
+            model, 
+            num_processors 
+            processwith countUnique(0)
+        </show>
+    </report>
+     <report name="Missing.HRD.HostContainer.Report">
+        <title>HostContainer</title>
+        <description>HostContainer nodes with missing Hardware Reference Data (HRD)</description>
+        <kind>HostContainer</kind>
+        <where>
+            not virtual and not nodecount(traverse ::ReferenceData:HardwareReferenceData) and vendor and model
+        </where>
+        <show>
+            vendor, 
+            model, 
+            processwith countUnique(0)
+        </show>
+    </report>
+    <report name="Missing.EOL.ManagementController.Report">
+        <title>ManagementController</title>
+        <description>ManagementController nodes with missing EOL data</description>
+        <kind>ManagementController</kind>
+        <where>
+            not nodecount(traverse ::HardwareDetail:SupportDetail) and vendor and model
+        </where>
+        <show>
+            vendor, 
+            model, 
+            os_type, 
+            os_version 
+            processwith countUnique(0)
+        </show>
+    </report>
+    <report name="Missing.EOL.NetworkDevice_HW.Report">
+        <title>NetworkDevice (Hardware)</title>
+        <description>NetworkDevice nodes with missing Hardware EOL data</description>
+        <kind>NetworkDevice</kind>
+        <where>
+            not nodecount(traverse ::HardwareDetail:SupportDetail) and vendor and model
+        </where>
+        <show>
+            vendor, 
+            model, 
+            product_id, 
+            firmware_version, 
+            os_type, 
+            os_version 
+            processwith countUnique(0)
+        </show>
+    </report> 
+    <report name="Missing.EOL.Printer.Report">
+        <title>Printer</title>
+        <description>Printer nodes with missing EOL data</description>
+        <kind>Printer</kind>
+        <where>
+            not nodecount(traverse ::HardwareDetail:SupportDetail) and vendor and model
+        </where>
+        <show>
+            vendor, 
+            model, 
+            os_type, 
+            os_version 
+            processwith countUnique(0)
+        </show>
+    </report>
+    <report name="Missing.EOL.SNMPManagedDevice.Report">
+        <title>SNMPManagedDevice</title>
+        <description>SNMPManagedDevice nodes with missing EOL data</description>
+        <kind>SNMPManagedDevice</kind>
+        <where>
+            not nodecount(traverse ::HardwareDetail:SupportDetail) and vendor and model
+        </where>
+        <show>
+            vendor, 
+            model
+            processwith countUnique(0)
+        </show>
+    </report>
+    <report name="Missing.EOL.StorageDevice.Report">
+        <title>StorageDevice</title>
+        <description>StorageDevice nodes with missing EOL data</description>
+        <kind>StorageDevice</kind>
+        <where>
+            not nodecount(traverse ::HardwareDetail:SupportDetail) and vendor and model
+        </where>
+        <show>
+            vendor, 
+            model, 
+            firmware_version, 
+            os_type, 
+            os_version 
+            processwith countUnique(0)
+        </show>
+    </report>
+
+<!-- OSDetail reports -->
+    <chart name="Missing.OSDetail.Chart" default="pie">
+        <title>OperatingSystem</title>
+        <description>Missing EOL record for OS</description>
+        <kind>FLAGS (no_segment) Host,NetworkDevice</kind>
+        <where>not nodecount(traverse ::OSDetail:SupportDetail) and os_type and os_version</where>
+        <order-by>os_type</order-by>
+        <split>os_type as "_|OS|_"</split>
+        <y-axis-title>_|Count|_</y-axis-title>
+        <show>
+            name,
+            os_class, 
+            os_type, 
+            os_version, 
+            os_edition, 
+            os_build, 
+            os_vendor,
+            product_id, 
+            firmware_version
+        </show>
+    </chart>
+
+     <report name="Missing.EOL.Host_OS.Report">
+        <title>Host (Operating System)</title>
+        <description>Host nodes with missing EOL data (Operating System)</description>
+        <kind>Host</kind>
+        <where>
+            not nodecount(traverse ::OSDetail:SupportDetail) and os_type and os_version
+        </where>
+        <show>
+            os_class, 
+            os_type, 
+            os_version, 
+            os_edition, 
+            os_build, 
+            os_vendor 
+            processwith countUnique(0)
+        </show>
+    </report>
+    <report name="Missing.EOL.NetworkDevice_OS.Report">
+        <title>NetworkDevice (Operating System)</title>
+        <description>NetworkDevice nodes with missing EOL data</description>
+        <kind>NetworkDevice</kind>
+        <where>
+            not nodecount(traverse ::OSDetail:SupportDetail) and os_type and os_version
+        </where>
+        <show>
+            vendor, 
+            model, 
+            product_id, 
+            firmware_version, 
+            os_type, 
+            os_version 
+            processwith countUnique(0)
+        </show>
+    </report>
+
+<!-- SoftwareDetail reports -->
+    <chart name="Missing.SoftwareDetail.Chart" default="pie">
+        <title>Software</title>
+        <description>Missing EOL record for Software split by vendor or type</description>
+        <kind>FLAGS (no_segment) RuntimeEnvironment,SoftwareInstance,VirtualMachine,Cluster,SoftwareCluster</kind>
+        <where>product_version and not product_version = '' and not nodecount(traverse ::SoftwareDetail:SupportDetail) </where>
+        <order-by>#kind</order-by>
+        <split>(#::Pattern:Pattern.publishers or type) as "_|type|_"</split>
+        <y-axis-title>_|Count|_</y-axis-title>
+        <show>
+            name,
+            type, 
+            product_version, 
+            service_pack, 
+            edition 
+        </show>
+    </chart>
+
+    <!-- Cluster nodes such as Kubernetes do not appear to have been configured with EOL data yet -->
+    <report name="Missing.EOL.Cluster.Report">
+        <title>Cluster</title>
+        <description>Cluster nodes with missing EOL data</description>
+        <kind>Cluster</kind>
+        <where>
+            product_version and not product_version='' and not nodecount(traverse ::SoftwareDetail:SupportDetail)
+        </where>
+        <show>
+            type, 
+            product_version, 
+            processwith countUnique(0)
+        </show>
+    </report>
+    <report name="Missing.EOL.RuntimeEnvironment.Report">
+        <title>RuntimeEnvironment</title>
+        <description>RuntimeEnvironment nodes with missing EOL data</description>
+        <kind>RuntimeEnvironment</kind>
+        <where>
+            product_version and not product_version='' and not nodecount(traverse ::SoftwareDetail:SupportDetail)
+        </where>
+        <show>
+            type, 
+            product_version, 
+            service_pack, 
+            edition 
+            processwith countUnique(0)
+        </show>
+    </report>
+    <report name="Missing.EOL.SoftwareCluster.Report">
+        <title>SoftwareCluster</title>
+        <description>SoftwareCluster nodes with missing EOL data</description>
+        <kind>SoftwareCluster</kind>
+        <where>
+            product_version and not product_version='' and not nodecount(traverse ::SoftwareDetail:SupportDetail)
+        </where>
+        <show>
+            type, 
+            product_version
+            processwith countUnique(0)
+        </show>
+    </report>
+    <report name="Missing.EOL.SoftwareInstance.Report">
+        <title>SoftwareInstance</title>
+        <description>SoftwareInstance nodes with missing EOL data</description>
+        <kind>SoftwareInstance</kind>
+        <where>
+            product_version and not product_version='' and not nodecount(traverse ::SoftwareDetail:SupportDetail)
+        </where>
+        <show>
+            type, 
+            product_version, 
+            service_pack, 
+            edition 
+            processwith countUnique(0)
+        </show>
+    </report>
+    <report name="Missing.EOL.VirtualMachine.Report">
+        <title>VirtualMachine</title>
+        <description>VirtualMachine nodes with missing EOL data</description>
+        <kind>VirtualMachine</kind>
+        <where>
+            product_version and not product_version='' and not nodecount(traverse ::SoftwareDetail:SupportDetail)
+        </where>
+        <show>
+            type, 
+            product_version, 
+            service_pack, 
+            edition 
+            processwith countUnique(0)
+        </show>
+    </report>
+
+    <report-channel name="Obsolescence.Missing.Dates">
+        <title>Obsolescence gap reports</title>
+        <description>Reports of missing obsolescence data for reporting to vendor for review</description>
+        <chart>Missing.HardwareDetail.Chart</chart>
+            <report indent="true">Missing.EOL.HardwareComponent.Report</report>
+            <report indent="true">Missing.EOL.HardwareContainer.Report</report>
+            <report indent="true">Missing.HRD.Host.Report</report>
+            <report indent="true">Missing.HRD.HostContainer.Report</report>
+            <report indent="true">Missing.EOL.ManagementController.Report</report>
+            <report indent="true">Missing.EOL.NetworkDevice_HW.Report</report>       
+            <report indent="true">Missing.EOL.Printer.Report</report>
+            <report indent="true">Missing.EOL.SNMPManagedDevice.Report</report>
+            <report indent="true">Missing.EOL.StorageDevice.Report</report>
+        <chart>Missing.OSDetail.Chart</chart>
+            <report indent="true">Missing.EOL.Host_OS.Report</report>
+            <report indent="true">Missing.EOL.NetworkDevice_OS.Report</report>
+        <chart>Missing.SoftwareDetail.Chart</chart>
+            <report indent="true">Missing.EOL.Cluster.Report</report>
+            <report indent="true">Missing.EOL.RuntimeEnvironment.Report</report>
+            <report indent="true">Missing.EOL.SoftwareCluster.Report</report>
+            <report indent="true">Missing.EOL.SoftwareInstance.Report</report>
+            <report indent="true">Missing.EOL.VirtualMachine.Report</report>
+    </report-channel>
+
+<!-- EOL charts -->
+<!-- Channels for Service context - expired eol -->
+    <chart-channel name="ChartChannel.Expired.Services.Full" default="pie">
+        <title>Services with any obsolete product</title>
+        <description>Count of obsolete technologies that are underpinning a Service</description>
+        <kind>FLAGS (no_segment) ModelDefinition traverse :::</kind>
+        <where>nodecount(traverse ElementWithDetail:SupportDetail::SupportDetail WHERE end_support_date AND (time(currentTime()) > time(end_support_date)))>0 AND nodecount(traverse :::ModelDefinition WHERE state = 'published')>0</where>
+        <order-by>#kind, (os_type or type) desc</order-by>
+        <split>single(#:::ModelDefinition.name) as "_|Service|_"</split>
+        <show>
+            #kind AS 'Node', 
+            (os_type or type) AS 'Type', 
+            (version or os_version) AS 'Version', 
+            formatTime(#ElementWithDetail:SupportDetail::SupportDetail.end_support_date, "%B %Y") AS 'End of Life', 
+            explode(#:::ModelDefinition.name) AS 'Service'
+        </show>
+    </chart-channel>
+
+    <!-- <chart-channel name="ChartChannel.Expired.Services.HardwareDetail" default="pie">
+        <title>Services with obsolete Hardware</title>
+        <description>Expired hardware counts that are underpinning a Service, excluding known excpetions for EOL dates</description>
+        <kind>FLAGS (no_segment) Host,HostContainer,HardwareComponent,HardwareContainer,ManagementController,NetworkDevice,Printer,StorageDevice</kind>
+        <where>nodecount(traverse ElementWithDetail:SupportDetail:HardwareDetail:SupportDetail WHERE end_support_date AND (time(currentTime()) > time(end_support_date) ) ) >0 AND nodecount(traverse :::ModelDefinition) >0</where>
+        <order-by>vendor, model</order-by>
+        <split>single(#:::ModelDefinition.name) as "_|Service|_"</split>
+        <show>
+            #kind AS 'Node', 
+            vendor, 
+            model, 
+            formatTime(#ElementWithDetail:SupportDetail:HardwareDetail:SupportDetail.end_support_date, "%B %Y") AS 'End of Life', 
+            explode(#:::ModelDefinition.name) AS 'Service'
+        </show>
+    </chart-channel> -->
+    <!-- <chart-channel name="ChartChannel.Expired.Services.OSDetail" default="pie">
+        <title>Services with obsolete Operating Systems</title>
+        <description>Expired operatingsystem counts that are underpinning a Service, excluding known excpetions for EOL dates</description>
+        <kind>FLAGS (no_segment) Host,NetworkDevice</kind>
+        <where>nodecount(traverse ElementWithDetail:SupportDetail:OSDetail:SupportDetail WHERE end_support_date AND (time(currentTime()) > time(end_support_date) ) ) >0 AND nodecount(traverse :::ModelDefinition) >0</where>
+        <order-by>os_type, os_version</order-by>
+        <split>single(#:::ModelDefinition.name) as "_|Service|_"</split>
+        <show>
+            #kind AS 'Node', 
+            name,
+            os_type, 
+            os_version, 
+            formatTime(#ElementWithDetail:SupportDetail:OSDetail:SupportDetail.end_support_date, "%B %Y") AS 'End of Life', 
+            explode(#:::ModelDefinition.name) AS 'Service'
+        </show>
+    </chart-channel> -->
+    <chart-channel name="ChartChannel.Expired.Services.SoftwareDetail" default="pie">
+        <title>Services with obsolete Software</title>
+        <description>Expired software counts that are underpinning a Service, excluding known excpetions for EOL dates</description>
+        <kind>FLAGS (no_segment) RuntimeEnvironment,SoftwareInstance,VirtualMachine,Cluster</kind>
+        <where>nodecount(traverse ElementWithDetail:SupportDetail:SoftwareDetail:SupportDetail WHERE end_support_date AND (time(currentTime()) > time(end_support_date) ) ) >0 AND nodecount(traverse :::ModelDefinition) >0</where>
+        <order-by>type, version</order-by>
+        <split>single(#:::ModelDefinition.name) as "_|Service|_"</split>
+        <show>
+            type, 
+            version,
+            formatTime(#ElementWithDetail:SupportDetail:SoftwareDetail:SupportDetail.end_support_date, "%B %Y") AS 'End of Life', 
+            explode(#:::ModelDefinition.name) AS 'Service'
+        </show>
+    </chart-channel>
+
+<!-- search SupportDetail where failure_reason and type = 'OS Support Detail' and nodecount(traverse OSDetail:SupportDetail:ElementWithDetail:) order by failure_reason show publisher, product, product_version, failure_reason, failure_reason processwith where failure_reason = 'The missing dates are not pertinent to this product' show publisher, product, product_version, failure_reason -->
+    <chart-channel name="ChartChannel.EOLFailureReasons" default="pie">
+        <title>Obsolescence exception reasons</title>
+        <description>Breakdown of obsolescence exceptions</description>
+        <kind>SupportDetail</kind>
+        <where>failure_reason and NODECOUNT(TRAVERSE :SupportDetail:ElementWithDetail:)>0</where>
+        <order-by>failure_reason</order-by>
+        <split>failure_reason</split>
+        <show>
+            publisher,
+            product,
+            product_version,
+            failure_reason
+        </show>
+    </chart-channel>
+
+<!-- Missing attributes for EOL mapping -->
+    <chart name="Chart.DQ.HardwareDetail" default="pie">
+        <title>Hardware</title>
+        <description>Missing vendor or model attributes</description>
+        <kind>FLAGS (no_segment) Host,HostContainer,HardwareComponent,HardwareContainer,ManagementController,NetworkDevice,Printer,SNMPManagedDevice,StorageDevice</kind>
+        <where>not virtual and (not vendor or not model)</where>
+        <order-by>#kind</order-by>
+        <split>#kind as "_|Node|_"</split>
+        <show>
+            summary
+        </show>
+    </chart>
+    <chart name="Chart.DQ.OSDetail" default="pie">
+        <title>OperatingSystem</title>
+        <description>Missing os_type or os_version attributes</description>
+        <kind>FLAGS (no_segment) Host,NetworkDevice</kind>
+        <where>not os_type or not os_version</where>
+        <order-by>os</order-by>
+        <split>os as "_|OS|_"</split>
+        <show>
+            summary
+        </show>
+    </chart>
+    <chart name="Chart.DQ.SoftwareDetail" default="pie">
+        <title>Software</title>
+        <description>Missing product_version attribute</description>
+        <kind>FLAGS (no_segment) RuntimeEnvironment,SoftwareInstance,VirtualMachine,Cluster,SoftwareCluster</kind>
+        <where>not product_version</where>
+        <order-by>#kind</order-by>
+        <split>type as "_|type|_"</split>
+        <y-axis-title>_|Count|_</y-axis-title>
+        <show>
+            summary
+        </show>
+    </chart>
+    <report-channel name="Obsolescence.Missing.attributes">
+        <title>Obsolescence data quality reports</title>
+        <description>Reports of missing attributes required for obsolescence reporting</description>
+        <chart>Chart.DQ.HardwareDetail</chart>
+        <chart>Chart.DQ.OSDetail</chart>
+        <chart>Chart.DQ.SoftwareDetail</chart>
+    </report-channel>
+
+    <!-- <chart-multi-channel name="MultiChart.Expired.HardwareDetail" default="column_nolegend">
+        <title>Obsolete Hardware</title>
+        <description> </description>
+        <kind>FLAGS (no_segment) Host,HostContainer,HardwareComponent,HardwareContainer,ManagementController,NetworkDevice,Printer,StorageDevice</kind>
+        <where>nodecount(traverse ElementWithDetail:SupportDetail:HardwareDetail:SupportDetail WHERE end_support_date AND (time(currentTime()) > time(end_support_date) ) ) >0 </where>
+        <split>vendor</split>
+        <split>model</split>
+        <show>
+            vendor, 
+            model,
+            serial, 
+            formatTime(#ElementWithDetail:SupportDetail:HardwareDetail:SupportDetail.end_support_date, "%B %Y") AS 'End of Life'
+        </show>
+    </chart-multi-channel> -->
+
+
+</reports>
